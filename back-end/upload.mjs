@@ -2,7 +2,7 @@ import { NFTStorage, File } from 'nft.storage'
 import mime from 'mime'
 import fs from 'fs'
 import path from 'path'
-import NFTStorageAPIKey from './secrets.json'
+import NFTStorageAPIKey from './secrets.json' assert { type: "json" }
 
 
 const NFT_STORAGE_KEY = NFTStorageAPIKey
@@ -35,7 +35,9 @@ async function main() {
         console.error(`usage: ${process.argv[0]} ${process.argv[1]} <image-path> <name> <description>`)
         process.exit(1)
     }
-
+    console.log(imagePath)
+    console.log(name)
+    console.log(description)
     const [imagePath, name, description] = args
     const result = await storeNFT(imagePath, name, description)
     console.log(result)
