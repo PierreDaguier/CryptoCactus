@@ -2,7 +2,7 @@ import { NFTStorage, File } from 'nft.storage'
 import mime from 'mime'
 import fs from 'fs'
 import path from 'path'
-import NFTStorageAPIKey from './secrets.json' assert { type: "json" }
+import NFTStorageAPIKey from './secrets.json' 
 
 
 const NFT_STORAGE_KEY = NFTStorageAPIKey
