@@ -12,5 +12,5 @@ RUN yarn
 COPY . .
 
 # Expose port and start the service
-EXPOSE 3000
+EXPOSE 4000
 CMD [ "npm", "start" ]

@@ -6,24 +6,15 @@ services:
     ports:
       - "3000:3000"
     networks:
-      - mynetwork
-  frontend:
-    build:
-      context: frontend/
-    ports:
-      - "8080:8080"
-    networks:
-      - mynetwork
-    depends_on:
-      - backend
+      - cryptocaptus_network
   api-graphql:
     build:
       context: api-graphql/
     ports:
       - "4000:4000"
     networks:
-      - mynetwork
+      - cryptocaptus_network
     depends_on:
       - backend
 networks:
-  mynetwork:
+  cryptocaptus_network:

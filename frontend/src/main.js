@@ -1,13 +1,30 @@
+/**
+ * main.js
+ *
+ * Bootstraps Vuetify and other plugins then mounts the App`
+ */
+
+// Components
 import App from './App.vue'
-import vuetify from './plugins/vuetify'
-import { loadFonts } from './plugins/webfontloader'
-import Vue from 'vue'
-import { createProvider } from './vue-apollo'
 
-loadFonts()
+// Composables
+import { createApp } from 'vue'
+import 'vuetify/styles'
+import { createVuetify } from 'vuetify'
+import * as components from 'vuetify/components'
+import * as directives from 'vuetify/directives'
 
-new Vue({
-  vuetify,
-  apolloProvider: createProvider(),
-  render: h => h(App)
-}).$mount('#app');
+// Plugins
+import { registerPlugins } from '@/plugins'
+
+const vuetify = createVuetify({
+    components,
+    directives,
+  })
+
+const app = createApp(App)
+  .use(vuetify)
+
+registerPlugins(app)
+
+app.mount('#app')
