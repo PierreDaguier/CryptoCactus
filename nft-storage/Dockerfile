@@ -1,4 +1,4 @@
-FROM 19-alpine3.15
+FROM node:19
 
 COPY metadata.controller.js /
 COPY secrets.json /

@@ -1,3 +1,4 @@
 nft-storage/node_modules
 nft-storage/secrets.json
 smartcontract/node_modules
+graphql/node_modules

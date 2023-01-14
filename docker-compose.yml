@@ -1,0 +1,29 @@
+version: "3"
+services:
+  backend:
+    build:
+      context: backend/
+    ports:
+      - "3000:3000"
+    networks:
+      - mynetwork
+  frontend:
+    build:
+      context: frontend/
+    ports:
+      - "8080:8080"
+    networks:
+      - mynetwork
+    depends_on:
+      - backend
+  api-graphql:
+    build:
+      context: api-graphql/
+    ports:
+      - "4000:4000"
+    networks:
+      - mynetwork
+    depends_on:
+      - backend
+networks:
+  mynetwork:
