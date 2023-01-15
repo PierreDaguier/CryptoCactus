@@ -23,3 +23,19 @@ sudo sh ./start.sh
 * Switched old Vue framework for new @vue/cli framework in frontend 
 * Apollo and Vuetify installed on frontend
 
+### 15/01/2023
+
+* Switched for Vuetify 3 framework
+* Undockerized frontend
+* Rewrited deployment script
+* Added cactus icon
+* Created app background with Midjourney AI
+* Created app logo with Midjourney AI, Gimp and Inkscape
+* frontend/src/App.vue modifications:
+  - Title
+  - Logo
+  - Cards
+  - Application description
+  - Upload button
+  - Footer
+  - background image
