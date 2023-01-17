@@ -39,3 +39,13 @@ sudo sh ./start.sh
   - Upload button
   - Footer
   - background image
+
+### 16/01/2023
+* Added a new overlay window in front-end, linked to the upload button
+  - Added two conditionnal choices inside opening (...)
+  - (..) two differents forms with string inputs
+  - added current date timestamp as metadata
+  - created background for new overlay window
+  - Added a gridbox
+  - Added functions so outside-click and close button closes forms first then window
+  - changed buttons typos and hoverring 

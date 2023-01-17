@@ -27,7 +27,94 @@
           prepend-icon="mdi-cloud-upload" 
           v-bind:class="{ active: isHovering }" 
           v-on:mouseover="isHovering = true" 
-          v-on:mouseout="isHovering = false" >Upload</v-btn>
+          v-on:mouseout="isHovering = false"
+          @click="dialog = true" >Upload</v-btn>
+
+        <v-dialog v-model="dialog" persistent>
+    <v-card
+    class="h-50 w-50 md:h-50 md:w-50 mx-auto my-auto choose-plant"
+    min-height=700
+    min-width="700"
+    v-click-outside="onClickOutside"
+
+  
+    >
+    
+    <v-card-text>
+      <v-row class="mx-0 justify-center">
+        <v-col cols="6" class="text-center">
+          <v-btn class="my-5 choose-button" size="large" @click="onClickOption1">Deploy a new plant</v-btn>
+        </v-col>
+        <v-col cols="6" class="text-center">
+          <v-btn class="my-5 choose-button" size="large" @click="onClickOption2">Update a plant</v-btn>
+        </v-col>
+      </v-row>
+    </v-card-text>
+    <div class="plant-form secondary" v-if="showForm1">
+    <v-row align="center" >
+      <v-col cols="12"  >
+    <v-form  v-model="form1" class="px-3 ">
+    <v-text-field class="form-text" label="Specie/Variety" v-model="form1.species" ></v-text-field>
+    <v-text-field class="form-text" label="Owner" v-model="form1.owner" ></v-text-field>
+    <v-text-field class="form-text" label="Location" v-model="form1.location" ></v-text-field>
+    <v-text-field class="form-text" label="Any Comment" v-model="form2.comment" ></v-text-field>
+  </v-form>
+  </v-col>
+</v-row> 
+  
+
+  <v-row class="justify-center">
+  <v-col cols="3"  >
+  <v-btn class="upload-button2 mb-4 "
+         rounded="lg" 
+         size="x-large"
+         prepend-icon="mdi-cloud-upload"
+         v-bind:class="{ active: isHovering }" 
+          v-on:mouseover="isHovering = true" 
+          v-on:mouseout="isHovering = false"  
+         label="Upload">Upload</v-btn>
+  </v-col>
+</v-row>  
+  
+</div>
+
+      
+    
+<div class="plant-form secondary" v-if="showForm2">
+    <v-row align="center" >
+      <v-col cols="12"  >
+    <v-form  v-model="form1" class="px-3 ">
+    <v-text-field class="form-text" label="Smartcontract address" v-model="form2.smartcontract" ></v-text-field>
+    <v-text-field class="form-text" label="Specie/Variety" v-model="form2.species" ></v-text-field>
+    <v-text-field class="form-text" label="Owner" v-model="form2.owner" ></v-text-field>
+    <v-text-field class="form-text" label="Location" v-model="form2.location" ></v-text-field>
+    <v-text-field class="form-text" label="Any Comment" v-model="form2.comment" ></v-text-field>
+  </v-form>
+  </v-col>
+</v-row> 
+  
+
+  <v-row class="justify-center">
+  <v-col cols="3"  >
+  <v-btn class="upload-button2 mb-4 "
+         v-bind:class="{ active: isHovering }" 
+         v-on:mouseover="isHovering = true" 
+         v-on:mouseout="isHovering = false"
+         rounded="lg" 
+         size="x-large"  
+         label="Upload"
+         prepend-icon="mdi-cloud-upload">Upload</v-btn>
+  </v-col>
+</v-row>  
+  
+</div>
+    <v-card-actions class="justify-end">
+      <v-btn @click="onClickOutside" color="white">Close</v-btn>
+    </v-card-actions>
+  </v-card>
+
+</v-dialog>
+
         </div>
       </v-card>
       </v-col>
@@ -48,7 +135,25 @@ export default {
     currentYear: new Date().getFullYear(),
     showLoginModal: false,
     showRegisterModal: false,
-    isHovering: false
+    isHovering: false,
+    dialog: false,
+    showForm1: false,
+    showForm2: false,
+    form1: {
+      species: '',
+      date: new Date(),
+      owner: '',
+      location: '',
+      comment:''
+    },
+    form2: {
+      species: '',
+      date: new Date(),
+      owner: '',
+      location: '',
+      smartcontract: '',
+      comment:''
+    }
   }),
   methods: {
     openLoginModal() {
@@ -60,8 +165,27 @@ export default {
     closeModal() {
       this.showLoginModal = false
       this.showRegisterModal = false
+    },
+    onClickOutside () {
+      if (this.showForm1 == true) {
+        this.showForm1 = false
+      } else if (this.showForm2 == true) {
+        this.showForm2 = false
+      }
+        else {
+        this.dialog = false
+      }
+    },
+    onClickOption1() {
+        this.showForm1 = true
+        this.showForm2 = false
+    },
+    onClickOption2() {
+        this.showForm2 = true
+        this.showForm1 = false
     }
-  },
+    },
+
   apollo: {
     // Apollo queries and mutations go here
   }
@@ -93,6 +217,17 @@ export default {
   
 }
 
+.upload-button2 {
+  font-family: 'Amiri', serif;
+  font-size: 1.6rem;
+  color: black;
+  height: 1rem;
+  letter-spacing: 0.03rem;
+  text-transform:none !important;
+  background-color: rgb(58,138,96);
+  border: 3px solid rgba(24, 67, 49, 0.8);
+}
+
 .secondary {
   font-size: 1.35rem;
   font-family: 'Amiri', serif;
@@ -103,12 +238,54 @@ export default {
   font-family: 'Amiri', serif;
   font-size: 1.6rem;
   color: black;
-  /* text-shadow: -0.05rem 0 white, 0 0.05rem white, 0.05rem 0 white, 0 -0.05rem white; */
   height: 1rem;
+  letter-spacing: 0.03rem;
   text-transform:none !important;
   background-color: rgb(58,138,96);
   border: 3px solid rgba(24, 67, 49, 0.8);
+}
 
+.choose-button {
+  font-family: 'Amiri', serif;
+  letter-spacing: 0.03rem;
+  text-transform:none !important;
+  font-size: 1.55rem;
+  max-width: 15rem;
+  color: white;
+  background-color: rgba(24, 67, 49, 0.8);
+  border: 3px solid rgb(142,114,81);
+}
+
+.choose-plant {
+  background-image: url("./assets/choose-plant-background.png");
+  border: 3px solid rgba(24, 67, 49, 0.8);
+  background-size: cover;
+  margin:10px;
+  
+ 
+}
+.plant-form {
+  color: white;
+  border: black;
+  background-color: rgba(0, 0, 0, 0.8);
+  margin:10px;
+  padding-top: 10px;
+}
+
+.form-text {
+
+  letter-spacing: 0.03rem;
+  font-family: 'Amiri', serif;
+}
+
+.upload-button:hover {
+  background-color: rgb(58,138,96);
+  border: 3px solid rgb(24, 67, 49);
+}
+
+.upload-button2:hover {
+  background-color: rgb(58,138,96);
+  border: 3px solid rgb(24, 67, 49);
 }
 
 .active {
