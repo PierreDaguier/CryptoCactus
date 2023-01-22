@@ -16,5 +16,16 @@ services:
       - cryptocaptus_network
     depends_on:
       - backend
+  frontend:
+    build:
+      context: frontend/
+    ports:
+      - "8080:8080"
+    networks:
+      - cryptocaptus_network
+    depends_on:
+      - backend
+    volumes:
+      - "./pm2:/pm2"
 networks:
   cryptocaptus_network:

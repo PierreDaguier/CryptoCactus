@@ -9,6 +9,6 @@ docker-compose build
 # Start the containers
 docker-compose up -d
 
-cd frontend
-yarn
-yarn dev
+# cd frontend
+# yarn
+# yarn dev

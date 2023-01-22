@@ -48,4 +48,12 @@ sudo sh ./start.sh
   - created background for new overlay window
   - Added a gridbox
   - Added functions so outside-click and close button closes forms first then window
-  - changed buttons typos and hoverring 
+  - changed buttons typos and hoverring
+
+### 22/01/2023
+* Front-end dockerized back
+* pm2 installed and running front-end in the back
+* docker-compose edited
+* dockerfile edited
+* pm2 config file edited
+* start.sh edited
