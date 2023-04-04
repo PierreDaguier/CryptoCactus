@@ -1,21 +1,5 @@
 version: "3"
 services:
-  backend:
-    build:
-      context: backend/
-    ports:
-      - "3000:3000"
-    networks:
-      - cryptocaptus_network
-  api-graphql:
-    build:
-      context: api-graphql/
-    ports:
-      - "4000:4000"
-    networks:
-      - cryptocaptus_network
-    depends_on:
-      - backend
   frontend:
     build:
       context: frontend/
@@ -23,8 +7,6 @@ services:
       - "8080:8080"
     networks:
       - cryptocaptus_network
-    depends_on:
-      - backend
     volumes:
       - "./pm2:/pm2"
 networks:

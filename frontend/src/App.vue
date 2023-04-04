@@ -55,6 +55,8 @@
       <v-col cols="12"  >
     <v-form  v-model="form1" class="px-3 ">
     <v-text-field class="form-text" label="Specie/Variety" v-model="form1.species" ></v-text-field>
+    <v-text-field class="form-text" label="Name" v-model="Name" ></v-text-field>
+    <v-text-field class="form-text" label="Symbol" v-model="Symbol" ></v-text-field>
     <v-text-field class="form-text" label="Owner" v-model="form1.owner" ></v-text-field>
     <v-text-field class="form-text" label="Location" v-model="form1.location" ></v-text-field>
     <v-text-field class="form-text" label="Any Comment" v-model="form2.comment" ></v-text-field>
@@ -130,6 +132,9 @@
 
 
 <script>
+
+import deploy from "./deploynft.js";
+
 export default {
   data: () => ({
     currentYear: new Date().getFullYear(),
@@ -139,6 +144,8 @@ export default {
     dialog: false,
     showForm1: false,
     showForm2: false,
+    Name: "",
+    Symbol: "", 
     form1: {
       species: '',
       date: new Date(),
@@ -156,6 +163,30 @@ export default {
     }
   }),
   methods: {
+    async deployNFT() {
+      const nftName = this.Name;
+      const nftSymbol = this.Symbol;
+      if (nftName.length == 0 || nftSymbol.length == 0 ) {
+        console.log("The NFT must have a name and a symbol !")
+      }
+      else {
+        try {
+        const receipt = await deploy(nftName, nftSymbol);
+        console.log("Contrat déployé à l'adresse", receipt.contractAddress);
+      } catch (error) {
+        console.error("Erreur lors du déploiement", error);
+      }
+      }
+
+
+    },
+    async connectMetaMask() {
+      try {
+        await window.ethereum.request({ method: "eth_requestAccounts" });
+      } catch (error) {
+        console.error("Erreur lors de la connexion à MetaMask", error);
+      }
+    },
     openLoginModal() {
       this.showLoginModal = true
     },

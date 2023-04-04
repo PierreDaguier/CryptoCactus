@@ -5,9 +5,9 @@ import "./_ownable.sol";
  
 contract NFT is NFTokenMetadata, Ownable {
  
-  constructor() {
-    nftName = "{{nftName}}";
-    nftSymbol = "{{nftSymbol}}";
+  constructor(string memory _nftName, string memory _nftSymbol) {
+    nftName = _nftName;
+    nftSymbol = _nftSymbol;
   }
   
   function mint(address _to, uint256 _tokenId, string calldata _uri) external onlyOwner {
