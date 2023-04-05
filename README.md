@@ -57,3 +57,11 @@ sudo sh ./start.sh
 * dockerfile edited
 * pm2 config file edited
 * start.sh edited
+
+#### 05/04/2023
+* Simplification of the app
+  - No more backend and graphql dockers
+  - docker-compose edited
+  - start script edited
+  - smartcontracts extracted and nft storage api
+* Metamask implemented in the frontend with web3 and new connection window

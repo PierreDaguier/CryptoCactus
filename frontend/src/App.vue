@@ -54,12 +54,12 @@
     <v-row align="center" >
       <v-col cols="12"  >
     <v-form  v-model="form1" class="px-3 ">
-    <v-text-field class="form-text" label="Specie/Variety" v-model="form1.species" ></v-text-field>
+    <v-text-field class="form-text" label="Specie/Variety" v-model="species" ></v-text-field>
     <v-text-field class="form-text" label="Name" v-model="Name" ></v-text-field>
     <v-text-field class="form-text" label="Symbol" v-model="Symbol" ></v-text-field>
-    <v-text-field class="form-text" label="Owner" v-model="form1.owner" ></v-text-field>
-    <v-text-field class="form-text" label="Location" v-model="form1.location" ></v-text-field>
-    <v-text-field class="form-text" label="Any Comment" v-model="form2.comment" ></v-text-field>
+    <v-text-field class="form-text" label="Owner" v-model="owner" ></v-text-field>
+    <v-text-field class="form-text" label="Location" v-model="plantLocation" ></v-text-field>
+    <v-text-field class="form-text" label="Any Comment" v-model="comment" ></v-text-field>
   </v-form>
   </v-col>
 </v-row> 
@@ -74,7 +74,8 @@
          v-bind:class="{ active: isHovering }" 
           v-on:mouseover="isHovering = true" 
           v-on:mouseout="isHovering = false"  
-         label="Upload">Upload</v-btn>
+         label="Upload"
+         @click="deployNFT">Upload</v-btn>
   </v-col>
 </v-row>  
   
@@ -86,11 +87,11 @@
     <v-row align="center" >
       <v-col cols="12"  >
     <v-form  v-model="form1" class="px-3 ">
-    <v-text-field class="form-text" label="Smartcontract address" v-model="form2.smartcontract" ></v-text-field>
-    <v-text-field class="form-text" label="Specie/Variety" v-model="form2.species" ></v-text-field>
-    <v-text-field class="form-text" label="Owner" v-model="form2.owner" ></v-text-field>
-    <v-text-field class="form-text" label="Location" v-model="form2.location" ></v-text-field>
-    <v-text-field class="form-text" label="Any Comment" v-model="form2.comment" ></v-text-field>
+    <v-text-field class="form-text" label="Smartcontract address" v-model="smartcontract" ></v-text-field>
+    <v-text-field class="form-text" label="Specie/Variety" v-model="species" ></v-text-field>
+    <v-text-field class="form-text" label="Owner" v-model="owner" ></v-text-field>
+    <v-text-field class="form-text" label="Location" v-model="plantLocation" ></v-text-field>
+    <v-text-field class="form-text" label="Any Comment" v-model="comment" ></v-text-field>
   </v-form>
   </v-col>
 </v-row> 
@@ -105,7 +106,8 @@
          rounded="lg" 
          size="x-large"  
          label="Upload"
-         prepend-icon="mdi-cloud-upload">Upload</v-btn>
+         prepend-icon="mdi-cloud-upload"
+         @click="deployNFT">Upload</v-btn>
   </v-col>
 </v-row>  
   
@@ -122,6 +124,24 @@
       </v-col>
     </v-row>
   </v-container>
+
+  <v-dialog v-model="showMetaMaskOverlay" persistent max-width="400">
+    <v-card>
+      <v-card-title>Connexion à MetaMask requise</v-card-title>
+      <v-card-text>
+        <p>Pour utiliser cette application, vous devez vous connecter à MetaMask.</p>
+        <p>
+          <a href="https://metamask.io/" target="_blank" rel="noopener noreferrer">
+            Cliquez ici pour installer ou accéder à MetaMask
+          </a>
+        </p>
+      </v-card-text>
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn color="primary" @click="connectMetaMask">Réessayer</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
   <v-footer class="pa-6 bg-black">
       <p class="subtitle-2 text-center white">Copyright &copy; {{ currentYear }} Pierre Daguier. All rights reserved.</p>
     </v-footer>
@@ -137,6 +157,7 @@ import deploy from "./deploynft.js";
 
 export default {
   data: () => ({
+    showMetaMaskOverlay: false,
     currentYear: new Date().getFullYear(),
     showLoginModal: false,
     showRegisterModal: false,
@@ -150,14 +171,14 @@ export default {
       species: '',
       date: new Date(),
       owner: '',
-      location: '',
+      plantLocation: '',
       comment:''
     },
     form2: {
       species: '',
       date: new Date(),
       owner: '',
-      location: '',
+      plantLocation: '',
       smartcontract: '',
       comment:''
     }
@@ -181,12 +202,20 @@ export default {
 
     },
     async connectMetaMask() {
-      try {
-        await window.ethereum.request({ method: "eth_requestAccounts" });
-      } catch (error) {
-        console.error("Erreur lors de la connexion à MetaMask", error);
+    try {
+      const accounts = await window.ethereum.request({ method: 'eth_accounts' });
+
+      if (accounts.length === 0) {
+        await window.ethereum.request({ method: 'eth_requestAccounts' });
       }
-    },
+
+      // Si l'utilisateur se connecte avec succès, fermez l'overlay
+      this.showMetaMaskOverlay = false;
+    } catch (error) {
+      console.error("Erreur lors de la connexion à MetaMask", error);
+      this.showMetaMaskOverlay = true;
+    }
+  },
     openLoginModal() {
       this.showLoginModal = true
     },
@@ -216,6 +245,9 @@ export default {
         this.showForm1 = false
     }
     },
+    mounted() {
+  this.connectMetaMask();
+},
 
   apollo: {
     // Apollo queries and mutations go here
