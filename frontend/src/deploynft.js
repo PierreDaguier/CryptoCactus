@@ -1,6 +1,7 @@
 // deployNFT.js
 import Web3 from "web3";
 import NFTContract from "@/assets/NFT.json";
+
 let web3;
 
 // Vérifiez si MetaMask est installé
