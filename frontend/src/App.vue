@@ -62,7 +62,7 @@
     <v-text-field class="form-text" label="Location" v-model="plantLocation" ></v-text-field>
     <v-text-field class="form-text" label="Any Comment" v-model="comment" ></v-text-field>    <v-file-input
       v-model="uploadedImage"
-      label="Choisir une image"
+      label="Upload your plant's picture"
       accept="image/*">
     </v-file-input>
 
@@ -93,14 +93,16 @@
     <v-row align="center" >
       <v-col cols="12"  >
     <v-form  v-model="form1" class="px-3 ">
-    <v-text-field class="form-text" label="Smartcontract address" v-model="smartcontract" ></v-text-field>
+    <v-text-field class="form-text" label="Smartcontract address" v-model="smartcontractAddress" ></v-text-field>
+    <v-text-field class="form-text" label="Name" v-model="plantName" ></v-text-field>
+    <v-text-field class="form-text" label="Description" v-model="description" ></v-text-field>
     <v-text-field class="form-text" label="Specie/Variety" v-model="species" ></v-text-field>
     <v-text-field class="form-text" label="Owner" v-model="owner" ></v-text-field>
     <v-text-field class="form-text" label="Location" v-model="plantLocation" ></v-text-field>
     <v-text-field class="form-text" label="Any Comment" v-model="comment" ></v-text-field>
     <v-file-input
       v-model="uploadedImage"
-      label="Choisir une image"
+      label="Upload your plant's picture"
       accept="image/*">
     </v-file-input>
 
@@ -119,7 +121,7 @@
          size="x-large"  
          label="Upload"
          prepend-icon="mdi-cloud-upload"
-         @click="onUploadClick">Upload</v-btn>
+         @click="UpdatePlant">Upload</v-btn>
   </v-col>
 </v-row>  
   
@@ -202,7 +204,7 @@ export default {
       date: new Date(),
       owner: '',
       plantLocation: '',
-      smartcontract: '',
+      smartcontractAddress: '',
       comment:''
     }
   }),
@@ -214,6 +216,22 @@ export default {
     return { ...toRefs(state) };
   },
   methods: {
+    async UpdatePlant() {      
+      console.log(apiKey, 'apiKey')
+      const json = await this.generateJSON();
+      console.log(json, 'step 1')
+      const jsonUri = await this.uploadJSON(json);
+      console.log(jsonUri, 'step 2')
+      this.contractAddress = this.smartcontractAddress
+      console.log(this.contractAddress, 'step 3') 
+
+      const accounts = await this.web3.eth.getAccounts();
+      const account = accounts[0];
+      const to = account;
+      const mint = await this.mint(to,jsonUri);
+      console.log(mint, 'step 4')
+      return mint
+    },
     async uploadImage(imageFile) {
   const file = new File(imageFile, imageFile.name, { type: imageFile.type });
   console.log(imageFile, 'imageFile')
@@ -310,11 +328,10 @@ async onUploadClick() {
   await this.deployNFT();
   console.log(this.contractAddress, 'step 3') // Vérifiez que l'adresse du contrat est bien stockée
 
-  const tokenId = 1;
   const accounts = await this.web3.eth.getAccounts();
   const account = accounts[0];
   const to = account;
-  const mint = await this.mint(to, tokenId, jsonUri);
+  const mint = await this.mint(to,jsonUri);
   console.log(mint, 'step 4')
   return mint
 },
