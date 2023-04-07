@@ -80,7 +80,7 @@
           v-on:mouseover="isHovering = true" 
           v-on:mouseout="isHovering = false"  
          label="Upload"
-         @click="deployNFT">Upload</v-btn>
+         @click="onUploadClick">Upload</v-btn>
   </v-col>
 </v-row>  
   
@@ -118,7 +118,7 @@
          size="x-large"  
          label="Upload"
          prepend-icon="mdi-cloud-upload"
-         @click="deployNFT">Upload</v-btn>
+         @click="onUploadClick">Upload</v-btn>
   </v-col>
 </v-row>  
   
@@ -166,9 +166,14 @@
 
 import deploy from "./deploynft.js";
 import { create } from 'ipfs-http-client';
+import { NFTStorage, File } from 'nft.storage';
 import NFTContract from "./assets/NFT.json";
+import NFTStorage_API_Key from "../secrets.json"
+import { inject, reactive, toRefs } from 'vue';
 
 const ipfs = create({ host: 'ipfs.infura.io', port: 5001, protocol: 'https' });
+const apiKey = NFTStorage_API_Key.NFTStorage_API_Key
+const nftStorageClient = new NFTStorage({ token: apiKey });
 
 export default {
   data: () => ({
@@ -200,12 +205,26 @@ export default {
       comment:''
     }
   }),
+  setup() {
+    const web3 = inject('web3');
+    const state = reactive({
+    web3: web3,
+  });
+    return { ...toRefs(state) };
+  },
   methods: {
     async uploadImage(imageFile) {
-      const file = new File([imageFile], imageFile.name, { type: imageFile.type });
-      const { cid } = await ipfs.add(file);
-      return `https://${cid}.ipfs.infura.io/ipfs/${cid}`;
-    },
+  const file = new File(imageFile, imageFile.name, { type: imageFile.type });
+  console.log(imageFile, 'imageFile')
+  console.log(imageFile[0].name, 'imageFile.name')
+  console.log(imageFile[0].type, 'imageFile.type')
+  const cid = await nftStorageClient.storeBlob(file);
+  console.log(this.nftStorageUrl(cid), 'url image');
+  return this.nftStorageUrl(cid);
+},
+nftStorageUrl(cid) {
+  return `https://${cid}.ipfs.nftstorage.link/`;
+},
     async deployNFT() {
       const nftName = this.Name;
       const nftSymbol = this.Symbol;
@@ -224,38 +243,42 @@ export default {
 
 
     },
-    async mint(to, tokenId, uri) {
-      const abi = NFTContract.abi;
-      const contractAddress = this.contractAddress;
-      const contract = new this.$web3.eth.Contract(abi, contractAddress);
 
-      const accounts = await this.$web3.eth.getAccounts();
-      const account = accounts[0]; // Utilise le compte actuellement connecté à MetaMask
 
-      if (!account) {
-        throw new Error("Aucun compte Ethereum connecté.");
-      }
+async mint(to, tokenId, uri) {
+  const abi = NFTContract.abi;
+  const contractAddress = this.contractAddress;
+  const contract = new this.web3.eth.Contract(abi, contractAddress);
 
-      const gasPrice = await this.$web3.eth.getGasPrice();
-      const gasEstimate = await contract.methods.mint(to, tokenId, uri).estimateGas({ from: account });
+  const accounts = await this.web3.eth.getAccounts();
+  const account = accounts[0];
 
-      const receipt = await contract.methods.mint(to, tokenId, uri).send({
-        from: account,
-        gas: gasEstimate,
-        gasPrice: gasPrice,
-      });
+  if (!account) {
+    throw new Error("Aucun compte Ethereum connecté.");
+  }
 
-      return receipt;
+  const gasPrice = await this.web3.eth.getGasPrice();
+  const gasEstimate = await contract.methods.mint(to, tokenId, uri).estimateGas({ from: account });
+
+  const receipt = await contract.methods.mint(to, tokenId, uri).send({
+    from: account,
+    gas: gasEstimate,
+    gasPrice: gasPrice,
+  });
+
+  console.log(receipt, 'receipt');
+
+  return receipt;
 },
     async generateJSON() {
-  const description = document.getElementById("description").value;
-  const imageInput = this.imageFile;
-  const imageUrl = await uploadImage(imageInput);
-  const plantName = document.getElementById("plantName").value;
-  const species = document.getElementById("species").value;
-  const plantLocation = document.getElementById("plantLocation").value;
-  const Owner = document.getElementById("Owner").value;
-  const comment = document.getElementById("comment").value;
+  const description = this.description;
+  const imageInput = this.uploadedImage;
+  const imageUrl = await this.uploadImage(imageInput);
+  const plantName = this.plantName;
+  const species = this.species;
+  const plantLocation = this.plantLocation;
+  const Owner = this.Owner;
+  const comment = this.comment;
   const dateTimestamped = Date.now();
 
   const jsonTemplate = {
@@ -274,19 +297,27 @@ export default {
   return jsonTemplate;
 },
 async onUploadClick() {
-    const json = await generateJSON();
-    const jsonUri = await uploadJSON(json);
+  console.log(apiKey, 'apiKey')
+  const json = await this.generateJSON();
+  console.log(json, 'step 1')
+  const jsonUri = await this.uploadJSON(json);
+  console.log(jsonUri, 'step 2')
 
-    const receipt = await this.deployNFT();
-    await deployNFT()
-    const tokenId = 1;
-    const to = this.userAddress;
-    await this.mint(to, tokenId, jsonUri);
+  await this.deployNFT();
+  console.log(this.contractAddress, 'step 3') // Vérifiez que l'adresse du contrat est bien stockée
 
-  },
+  const tokenId = 1;
+  const to = this.userAddress;
+  const mint = await this.mint(to, tokenId, jsonUri);
+  console.log(mint, 'step 4')
+  return mint
+},
 async uploadJSON(json) {
-  const { cid } = await ipfs.add(JSON.stringify(json));
-  return `https://${cid}.ipfs.infura.io/ipfs/${cid}`;
+  const jsonString = JSON.stringify(json);
+  const file = new File([jsonString], 'metadata.json', { type: 'application/json' });
+  const metadata = await nftStorageClient.storeBlob(file);
+  console.log(this.nftStorageUrl(metadata), 'json url')
+  return this.nftStorageUrl(metadata);
 },
     async connectMetaMask() {
     try {

@@ -5,3 +5,4 @@ graphql/node_modules
 api-graphql/node_modules
 backend/node_modules
 frontend/node_modules
+frontend/secrets.json
