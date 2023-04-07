@@ -53,13 +53,13 @@
     <div class="plant-form secondary" v-if="showForm1">
     <v-row align="center" >
       <v-col cols="12"  >
-    <v-form  v-model="form1" class="px-3 ">
-    <v-text-field class="form-text" label="Specie/Variety" v-model="species" ></v-text-field>
-    <v-text-field class="form-text" label="Name" v-model="plantName" ></v-text-field>
-    <v-text-field class="form-text" label="Description" v-model="description" ></v-text-field>
-    <v-text-field class="form-text" label="Symbol" v-model="Symbol" ></v-text-field>
-    <v-text-field class="form-text" label="Owner" v-model="owner" ></v-text-field>
-    <v-text-field class="form-text" label="Location" v-model="plantLocation" ></v-text-field>
+    <v-form  class="px-3 " @submit.prevent="uploadonclick">
+    <v-text-field class="form-text" label="Specie/Variety*" v-model="species" :rules="[rules.required]"></v-text-field>
+    <v-text-field class="form-text" label="Name*" v-model="plantName" :rules="[rules.required]"></v-text-field>
+    <v-text-field class="form-text" label="Description*" v-model="description" :rules="[rules.required]"></v-text-field>
+    <v-text-field class="form-text" label="Symbol*" v-model="Symbol" :rules="[rules.required]"></v-text-field>
+    <v-text-field class="form-text" label="Owner*" v-model="owner" :rules="[rules.required]"></v-text-field>
+    <v-text-field class="form-text" label="Location*" v-model="plantLocation" :rules="[rules.required]"></v-text-field>
     <v-text-field class="form-text" label="Any Comment" v-model="comment" ></v-text-field>    <v-file-input
       v-model="uploadedImage"
       label="Upload your plant's picture"
@@ -92,14 +92,14 @@
 <div class="plant-form secondary" v-if="showForm2">
     <v-row align="center" >
       <v-col cols="12"  >
-    <v-form  v-model="form1" class="px-3 ">
-    <v-text-field class="form-text" label="Smartcontract address" v-model="smartcontractAddress" ></v-text-field>
-    <v-text-field class="form-text" label="Name" v-model="plantName" ></v-text-field>
-    <v-text-field class="form-text" label="Description" v-model="description" ></v-text-field>
-    <v-text-field class="form-text" label="Specie/Variety" v-model="species" ></v-text-field>
-    <v-text-field class="form-text" label="Owner" v-model="owner" ></v-text-field>
-    <v-text-field class="form-text" label="Location" v-model="plantLocation" ></v-text-field>
-    <v-text-field class="form-text" label="Any Comment" v-model="comment" ></v-text-field>
+    <v-form  v-model="form1" class="px-3 " @submit.prevent="updatePlant">
+    <v-text-field class="form-text" label="Smartcontract address*" v-model="smartcontractAddress" :rules="[rules.required]"></v-text-field>
+    <v-text-field class="form-text" label="Name*" v-model="plantName" :rules="[rules.required]"></v-text-field>
+    <v-text-field class="form-text" label="Description*" v-model="description" :rules="[rules.required]"></v-text-field>
+    <v-text-field class="form-text" label="Specie/Variety*" v-model="species" :rules="[rules.required]"></v-text-field>
+    <v-text-field class="form-text" label="Owner*" v-model="owner" :rules="[rules.required]"></v-text-field>
+    <v-text-field class="form-text" label="Location*" v-model="plantLocation" :rules="[rules.required]"></v-text-field>
+    <v-text-field class="form-text" label="Any Comment*" v-model="comment" ></v-text-field>
     <v-file-input
       v-model="uploadedImage"
       label="Upload your plant's picture"
@@ -126,6 +126,7 @@
 </v-row>  
   
 </div>
+
     <v-card-actions class="justify-end">
       <v-btn @click="onClickOutside" color="white">Close</v-btn>
     </v-card-actions>
@@ -156,6 +157,25 @@
       </v-card-actions>
     </v-card>
   </v-dialog>
+
+  <v-dialog v-model="isLoading" persistent max-width="290">
+  <v-card>
+    <v-card-text class="text-center">
+      <v-progress-circular
+        indeterminate
+        size="64"
+        color="primary"
+      ></v-progress-circular>
+      <div class="mt-4">{{ loadingText }}</div>
+    </v-card-text>
+    <v-card-actions v-if="showCloseButton">
+    <v-spacer></v-spacer>
+    <v-btn color="primary" text @click="isLoading = false">Fermer</v-btn>
+  </v-card-actions>
+  </v-card>
+</v-dialog>
+
+
   <v-footer class="pa-6 bg-black">
       <p class="subtitle-2 text-center white">Copyright &copy; {{ currentYear }} Pierre Daguier. All rights reserved.</p>
     </v-footer>
@@ -192,21 +212,30 @@ export default {
     showForm2: false,
     plantName: "",
     Symbol: "", 
-    form1: {
-      species: '',
-      date: new Date(),
-      owner: '',
-      plantLocation: '',
-      comment:''
+    species: '',
+    date: new Date(),
+    owner: '',
+    plantLocation: '',
+    comment:'',
+    smartcontractAddress: '',
+    rules: {
+      required: value => !!value || 'This field must be filled.',
     },
-    form2: {
-      species: '',
-      date: new Date(),
-      owner: '',
-      plantLocation: '',
-      smartcontractAddress: '',
-      comment:''
-    }
+    isLoading: false,
+    loadingStep: 0,
+    loadingText: '',
+    showCloseButton: false,
+    stepsUpload: [
+      'metadata loading 1/2',
+      'metadata loading 2/2',
+      'contract deployment',
+      'mint',
+    ],
+    stepsUpdatePlant: [
+      'metadata loading 1/2',
+      'metadata loading 2/2',
+      'minting',
+    ],
   }),
   setup() {
     const web3 = inject('web3');
@@ -216,12 +245,16 @@ export default {
     return { ...toRefs(state) };
   },
   methods: {
-    async UpdatePlant() {      
+    async UpdatePlant() {  
+      this.isLoading = true;
+      this.loadingText = this.stepsUpdatePlant[0];
       console.log(apiKey, 'apiKey')
       const json = await this.generateJSON();
       console.log(json, 'step 1')
+      this.loadingText = this.stepsUpdatePlant[1];
       const jsonUri = await this.uploadJSON(json);
       console.log(jsonUri, 'step 2')
+      this.loadingText = this.stepsUpdatePlant[2];
       this.contractAddress = this.smartcontractAddress
       console.log(this.contractAddress, 'step 3') 
 
@@ -230,6 +263,7 @@ export default {
       const to = account;
       const mint = await this.mint(to,jsonUri);
       console.log(mint, 'step 4')
+      this.isLoading = false;
       return mint
     },
     async uploadImage(imageFile) {
@@ -266,7 +300,7 @@ nftStorageUrl(cid) {
     },
 
 
-async mint(to, tokenId, uri) {
+async mint(to, uri) {
   const abi = NFTContract.abi;
   const contractAddress = this.contractAddress;
   console.log(contractAddress, 'mint contract address')
@@ -280,9 +314,9 @@ async mint(to, tokenId, uri) {
   }
 
   const gasPrice = await this.web3.eth.getGasPrice();
-  const gasEstimate = await contract.methods.mint(to, tokenId, uri).estimateGas({ from: account });
+  const gasEstimate = await contract.methods.mint(to, uri).estimateGas({ from: account });
 
-  const receipt = await contract.methods.mint(to, tokenId, uri).send({
+  const receipt = await contract.methods.mint(to, uri).send({
     from: account,
     gas: gasEstimate,
     gasPrice: gasPrice,
@@ -318,22 +352,31 @@ async mint(to, tokenId, uri) {
 
   return jsonTemplate;
 },
+async simulateLoading() {
+    return new Promise(resolve => setTimeout(resolve, 1000));
+  },
 async onUploadClick() {
+  this.isLoading = true;
+  this.loadingText = this.stepsUpload[0];
   console.log(apiKey, 'apiKey')
   const json = await this.generateJSON();
   console.log(json, 'step 1')
+  this.loadingText = this.stepsUpload[1];
   const jsonUri = await this.uploadJSON(json);
   console.log(jsonUri, 'step 2')
-
+  this.loadingText = this.stepsUpload[2];
   await this.deployNFT();
   console.log(this.contractAddress, 'step 3') // Vérifiez que l'adresse du contrat est bien stockée
 
   const accounts = await this.web3.eth.getAccounts();
   const account = accounts[0];
   const to = account;
+  this.loadingText = this.stepsUpload[3];
   const mint = await this.mint(to,jsonUri);
   console.log(mint, 'step 4')
-  return mint
+  const endProcess = [mint,this.loadingText = `Smart contract address: ${this.contractAddress}`,this.showCloseButton = true];
+  return endProcess
+  
 },
 async uploadJSON(json) {
   const jsonString = JSON.stringify(json);

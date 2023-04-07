@@ -65,3 +65,21 @@ sudo sh ./start.sh
   - start script edited
   - smartcontracts extracted and nft storage api
 * Metamask implemented in the frontend with web3 and new connection window
+
+
+#### 06/04/2023 
+* Upload button script added with:
+  - nft-storage metadata upload function
+  - json generation function
+  - contract deployment
+* More fields added
+* Bug fixes on ipfs into http url
+
+#### 07/04/2023
+* Mint function fixed and working
+* Form improved with requested fields
+* Metamask triggered at opening
+* New loading animation triggered when upload button clicked
+* nft-storage old folder cleaned from the repo
+* Update plant working aswell
+* smartcontract improved with auto-incremented tokenID
