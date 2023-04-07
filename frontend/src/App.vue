@@ -55,7 +55,8 @@
       <v-col cols="12"  >
     <v-form  v-model="form1" class="px-3 ">
     <v-text-field class="form-text" label="Specie/Variety" v-model="species" ></v-text-field>
-    <v-text-field class="form-text" label="Name" v-model="Name" ></v-text-field>
+    <v-text-field class="form-text" label="Name" v-model="plantName" ></v-text-field>
+    <v-text-field class="form-text" label="Description" v-model="description" ></v-text-field>
     <v-text-field class="form-text" label="Symbol" v-model="Symbol" ></v-text-field>
     <v-text-field class="form-text" label="Owner" v-model="owner" ></v-text-field>
     <v-text-field class="form-text" label="Location" v-model="plantLocation" ></v-text-field>
@@ -187,7 +188,7 @@ export default {
     dialog: false,
     showForm1: false,
     showForm2: false,
-    Name: "",
+    plantName: "",
     Symbol: "", 
     form1: {
       species: '',
@@ -226,7 +227,7 @@ nftStorageUrl(cid) {
   return `https://${cid}.ipfs.nftstorage.link/`;
 },
     async deployNFT() {
-      const nftName = this.Name;
+      const nftName = this.plantName;
       const nftSymbol = this.Symbol;
       if (nftName.length == 0 || nftSymbol.length == 0 ) {
         console.log("The NFT must have a name and a symbol !")
@@ -234,8 +235,10 @@ nftStorageUrl(cid) {
       else {
         try {
         const receipt = await deploy(nftName, nftSymbol);
-        console.log("Contrat déployé à l'adresse", receipt.contractAddress);
-        this.contractAddress = receipt.contractAddress;
+        console.log(receipt, 'receipt')
+        console.log(receipt._address, 'receipt address')
+        console.log("Contrat déployé à l'adresse", receipt._address);
+        this.contractAddress = receipt._address;
       } catch (error) {
         console.error("Erreur lors du déploiement", error);
       }
@@ -248,6 +251,7 @@ nftStorageUrl(cid) {
 async mint(to, tokenId, uri) {
   const abi = NFTContract.abi;
   const contractAddress = this.contractAddress;
+  console.log(contractAddress, 'mint contract address')
   const contract = new this.web3.eth.Contract(abi, contractAddress);
 
   const accounts = await this.web3.eth.getAccounts();
@@ -307,7 +311,9 @@ async onUploadClick() {
   console.log(this.contractAddress, 'step 3') // Vérifiez que l'adresse du contrat est bien stockée
 
   const tokenId = 1;
-  const to = this.userAddress;
+  const accounts = await this.web3.eth.getAccounts();
+  const account = accounts[0];
+  const to = account;
   const mint = await this.mint(to, tokenId, jsonUri);
   console.log(mint, 'step 4')
   return mint
