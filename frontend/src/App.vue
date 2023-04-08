@@ -141,16 +141,20 @@
 
   <v-dialog v-model="showMetaMaskOverlay" persistent max-width="400">
     <v-card class="metamask-dialog">
-      <v-card-title class="dialog-title">Connection to Metamask needed</v-card-title>
+      <v-card-title class="dialog-title text-center">Connection to Metamask<br>needed</v-card-title>
       <img src="./assets/MetaMask_Fox.svg" alt="MetaMask Logo" />
-      <v-card-text class="dialog-text" >
+      <v-card class="card2-class rounded-shaped" outlined variant="tonal">
+      <v-card-text class="dialog-text text-center" >
+        
         <p>To use this app, you need to connect to Metamask</p>
-        <p>
-          <a href="https://metamask.io/" target="_blank" rel="noopener noreferrer">
+        <p class="text-center">
+          <a href="https://metamask.io/"  class="dialog-text" target="_blank" rel="noopener noreferrer">
             Click here to access or to install Metamask on your browser
           </a>
         </p>
+        
       </v-card-text>
+      </v-card>
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn 
@@ -161,16 +165,19 @@
     </v-card>
   </v-dialog>
 
-  <v-dialog v-model="isLoading" class="metamask-dialog" persistent max-width="290">
-  <v-card class="loading-dialog">
+  <v-dialog v-model="isLoading" persistent max-width="290">
+  <v-card class="loading-dialog metamask-dialog">
+    <v-card class="card2-class rounded-shaped" outlined variant="tonal">
     <v-card-text class="text-center">
       <img class="loading-icon" src="./assets/loading-animation.svg" alt="Loading Icon" v-bind:class="{ spin: isLoading }">
       <div class="mt-4 loadingText">{{ loadingText }}</div>
     </v-card-text>
+    
     <v-card-actions v-if="showCloseButton">
     <v-spacer></v-spacer>
-    <v-btn  text @click="isLoading = false">Fermer</v-btn>
+    <v-btn  text @click="isLoading = false">Close</v-btn>
   </v-card-actions>
+</v-card>
   </v-card>
 </v-dialog>
 
@@ -452,11 +459,13 @@ async uploadJSON(json) {
 .metamask-dialog {
   background-image: url("./assets/background-loading.png");
   border: 3px solid rgba(24, 67, 49, 0.9);
+  background-size: cover;
 }
 
 .loading-dialog {
   background-image: url("./assets/background-loading.png");
   border: 3px solid rgba(24, 67, 49, 0.8);
+  background-size: cover;
 }
 
 .v-card-title, .v-card-text {
@@ -514,8 +523,8 @@ a {
 
 .dialog-title {
   font-family: 'Amiri', serif;
-  font-size: 1.7rem;
-  color: black;
+  font-size: 1.6rem;
+  color: white;
   text-align: center;
   font-weight: bold;
 
@@ -524,7 +533,7 @@ a {
 .try-again-btn {
   font-family: 'Amiri', serif;
   font-size: 1.6rem;
-  color: black;
+  color: white;
   height: 1rem;
   letter-spacing: 0.03rem;
   text-transform:none !important;
@@ -577,10 +586,9 @@ a {
 }
 
 .loadingText {
-  color: black !important;
+  color: white !important;
   font-weight: bold;
   font-size: 1.6rem;
-  text-shadow: -0.03rem 0 white, 0 0.03rem white, 0.03rem 0 white, 0 -0.03rem white !important;
 }
 
 .choose-plant {
@@ -614,7 +622,7 @@ a {
 
 .dialog-text {
   font-family: 'Amiri', serif;
-  font-size: 1.5rem;
+  font-size: 1rem;
   color: white;
   font-weight: bold;
 
