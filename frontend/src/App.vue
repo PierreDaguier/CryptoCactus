@@ -514,11 +514,11 @@ a {
 
 .dialog-title {
   font-family: 'Amiri', serif;
-  font-size: 3rem;
+  font-size: 1.7rem;
   color: black;
   text-align: center;
   font-weight: bold;
-  text-shadow: -0.03rem 0 white, 0 0.03rem white, 0.03rem 0 white, 0 -0.03rem white !important;
+
 }
 
 .try-again-btn {
@@ -614,10 +614,10 @@ a {
 
 .dialog-text {
   font-family: 'Amiri', serif;
-  font-size: 2.5rem;
-  color: black;
+  font-size: 1.5rem;
+  color: white;
   font-weight: bold;
-  text-shadow: -0.03rem 0 white, 0 0.03rem white, 0.03rem 0 white, 0 -0.03rem white !important;
+
 }
 
 .dialog-button {
