@@ -1,4 +1,3 @@
-
 <template>
   <v-app class="app-background">
     <v-responsive> 
@@ -141,36 +140,36 @@
   </v-container>
 
   <v-dialog v-model="showMetaMaskOverlay" persistent max-width="400">
-    <v-card>
-      <v-card-title>Connexion à MetaMask requise</v-card-title>
-      <v-card-text>
-        <p>Pour utiliser cette application, vous devez vous connecter à MetaMask.</p>
+    <v-card class="metamask-dialog">
+      <v-card-title class="dialog-title">Connection to Metamask needed</v-card-title>
+      <img src="./assets/MetaMask_Fox.svg" alt="MetaMask Logo" />
+      <v-card-text class="dialog-text" >
+        <p>To use this app, you need to connect to Metamask</p>
         <p>
           <a href="https://metamask.io/" target="_blank" rel="noopener noreferrer">
-            Cliquez ici pour installer ou accéder à MetaMask
+            Click here to access or to install Metamask on your browser
           </a>
         </p>
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="primary" @click="connectMetaMask">Réessayer</v-btn>
+        <v-btn 
+         class="dialog-button try-again-btn" 
+         @click="connectMetaMask"
+         >Try again</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
 
-  <v-dialog v-model="isLoading" persistent max-width="290">
-  <v-card>
+  <v-dialog v-model="isLoading" class="metamask-dialog" persistent max-width="290">
+  <v-card class="loading-dialog">
     <v-card-text class="text-center">
-      <v-progress-circular
-        indeterminate
-        size="64"
-        color="primary"
-      ></v-progress-circular>
-      <div class="mt-4">{{ loadingText }}</div>
+      <img class="loading-icon" src="./assets/loading-animation.svg" alt="Loading Icon" v-bind:class="{ spin: isLoading }">
+      <div class="mt-4 loadingText">{{ loadingText }}</div>
     </v-card-text>
     <v-card-actions v-if="showCloseButton">
     <v-spacer></v-spacer>
-    <v-btn color="primary" text @click="isLoading = false">Fermer</v-btn>
+    <v-btn  text @click="isLoading = false">Fermer</v-btn>
   </v-card-actions>
   </v-card>
 </v-dialog>
@@ -181,17 +180,13 @@
     </v-footer>
   </v-app>
 </template>
-
-
-
-
 <script>
 
 import deploy from "./deploynft.js";
 import { create } from 'ipfs-http-client';
 import { NFTStorage, File } from 'nft.storage';
 import NFTContract from "./assets/NFT.json";
-import NFTStorage_API_Key from "../secrets.json"
+import NFTStorage_API_Key from "../secrets.json";
 import { inject, reactive, toRefs } from 'vue';
 
 const ipfs = create({ host: 'ipfs.infura.io', port: 5001, protocol: 'https' });
@@ -289,10 +284,10 @@ nftStorageUrl(cid) {
         const receipt = await deploy(nftName, nftSymbol);
         console.log(receipt, 'receipt')
         console.log(receipt._address, 'receipt address')
-        console.log("Contrat déployé à l'adresse", receipt._address);
+        console.log("Contract deployed on this address:", receipt._address);
         this.contractAddress = receipt._address;
       } catch (error) {
-        console.error("Erreur lors du déploiement", error);
+        console.error("Error occured during deployment", error);
       }
       }
 
@@ -310,7 +305,7 @@ async mint(to, uri) {
   const account = accounts[0];
 
   if (!account) {
-    throw new Error("Aucun compte Ethereum connecté.");
+    throw new Error("No Metamask account is connected.");
   }
 
   const gasPrice = await this.web3.eth.getGasPrice();
@@ -374,9 +369,10 @@ async onUploadClick() {
   this.loadingText = this.stepsUpload[3];
   const mint = await this.mint(to,jsonUri);
   console.log(mint, 'step 4')
-  const endProcess = [mint,this.loadingText = `Smart contract address: ${this.contractAddress}`,this.showCloseButton = true];
-  return endProcess
-  
+  const endProcess = [mint,this.loadingText = `Copy this address somewhere !\n
+  This is your plant address.\n
+  Smart contract address: ${this.contractAddress}`,this.showCloseButton = true];
+  return endProcess  
 },
 async uploadJSON(json) {
   const jsonString = JSON.stringify(json);
@@ -396,7 +392,7 @@ async uploadJSON(json) {
       // Si l'utilisateur se connecte avec succès, fermez l'overlay
       this.showMetaMaskOverlay = false;
     } catch (error) {
-      console.error("Erreur lors de la connexion à MetaMask", error);
+      console.error("An error occured while you connected to Metamask", error);
       this.showMetaMaskOverlay = true;
     }
   },
@@ -420,6 +416,7 @@ async uploadJSON(json) {
       this.showLoginModal = false
       this.showRegisterModal = false
     },
+    
     onClickOutside () {
       if (this.showForm1 == true) {
         this.showForm1 = false
@@ -452,6 +449,27 @@ async uploadJSON(json) {
 .v-footer {
   text-align: center;
 }
+.metamask-dialog {
+  background-image: url("./assets/background-loading.png");
+  border: 3px solid rgba(24, 67, 49, 0.9);
+}
+
+.loading-dialog {
+  background-image: url("./assets/background-loading.png");
+  border: 3px solid rgba(24, 67, 49, 0.8);
+}
+
+.v-card-title, .v-card-text {
+  font-family: 'Amiri', serif;
+  color: white;
+}
+
+
+a {
+  color: black;
+  text-decoration: underline;
+}
+
 .app-background {
   background-image: url("./src/assets/app-background.png");
   background-size: cover;}
@@ -459,6 +477,9 @@ async uploadJSON(json) {
 .card1-class {
   background-color: rgba(110, 150, 120, 0.715);
   height: 100vh;
+}
+.progress-circular {
+  color: rgba(24, 67, 49, 1);
 }
 
 .card2-class {
@@ -491,6 +512,31 @@ async uploadJSON(json) {
   color: white;
 }
 
+.dialog-title {
+  font-family: 'Amiri', serif;
+  font-size: 3rem;
+  color: black;
+  text-align: center;
+  font-weight: bold;
+  text-shadow: -0.03rem 0 white, 0 0.03rem white, 0.03rem 0 white, 0 -0.03rem white !important;
+}
+
+.try-again-btn {
+  font-family: 'Amiri', serif;
+  font-size: 1.6rem;
+  color: black;
+  height: 1rem;
+  letter-spacing: 0.03rem;
+  text-transform:none !important;
+  background-color: rgb(58,138,96);
+  border: 3px solid rgba(24, 67, 49, 0.8);
+}
+
+
+.try-again-btn:hover {
+  background-color: rgb(58,138,96);
+  border: 3px solid rgb(24, 67, 49);
+}
 .upload-button {
   font-family: 'Amiri', serif;
   font-size: 1.6rem;
@@ -500,6 +546,23 @@ async uploadJSON(json) {
   text-transform:none !important;
   background-color: rgb(58,138,96);
   border: 3px solid rgba(24, 67, 49, 0.8);
+}
+.loading-icon {
+  width: 64px;
+  height: 64px;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.spin {
+  animation: spin 1s linear infinite;
 }
 
 .choose-button {
@@ -513,13 +576,18 @@ async uploadJSON(json) {
   border: 3px solid rgb(142,114,81);
 }
 
+.loadingText {
+  color: black !important;
+  font-weight: bold;
+  font-size: 1.6rem;
+  text-shadow: -0.03rem 0 white, 0 0.03rem white, 0.03rem 0 white, 0 -0.03rem white !important;
+}
+
 .choose-plant {
   background-image: url("./assets/choose-plant-background.png");
   border: 3px solid rgba(24, 67, 49, 0.8);
   background-size: cover;
-  margin:10px;
-  
- 
+  margin:10px; 
 }
 .plant-form {
   color: white;
@@ -530,7 +598,6 @@ async uploadJSON(json) {
 }
 
 .form-text {
-
   letter-spacing: 0.03rem;
   font-family: 'Amiri', serif;
 }
@@ -543,6 +610,21 @@ async uploadJSON(json) {
 .upload-button2:hover {
   background-color: rgb(58,138,96);
   border: 3px solid rgb(24, 67, 49);
+}
+
+.dialog-text {
+  font-family: 'Amiri', serif;
+  font-size: 2.5rem;
+  color: black;
+  font-weight: bold;
+  text-shadow: -0.03rem 0 white, 0 0.03rem white, 0.03rem 0 white, 0 -0.03rem white !important;
+}
+
+.dialog-button {
+  font-family: 'Amiri', serif;
+  font-size: 1.2rem;
+  background-color: rgba(24, 67, 49, 0.8);
+  border: 3px solid rgb(142, 114, 81);
 }
 
 .active {

@@ -83,3 +83,9 @@ sudo sh ./start.sh
 * nft-storage old folder cleaned from the repo
 * Update plant working aswell
 * smartcontract improved with auto-incremented tokenID
+
+#### 08/04/2023
+* Added background image for Metamask alert and loading
+* Added spinning icon for loading and Metamask icon
+* Beautified stuffs around
+* Added smartcontract displayed at the end of the loading
