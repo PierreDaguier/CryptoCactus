@@ -1,10 +1,49 @@
-# CryptoCactus
+<span style="font-family: 'Satisfy', cursive;">Cryptocactus</span>
 
+![Cryptocactus logo](/frontend/src/assets/logo.png)
 
-To run it, go at root project and type : 
+Cryptocactus is a decentralized application that enables users to mint unique NFTs representing their plants on the Ethereum blockchain. The NFTs can be traded on marketplaces like OpenSea and will forever be a unique representation of the user's plant.
+
+## Authentication
+
+To use Cryptocactus, you need to connect to Metamask, a popular Ethereum wallet that enables users to interact with dApps like Cryptocactus.
+
+## Usage
+
+1. Click on "Upload Plant" button
+2. Choose whether to upload or update a plant
+3. Fill out the required information and upload an image of your plant
+4. Your plant will be minted as an NFT and will be available to view on OpenSea
+
+## Technologies
+
+Cryptocactus is built with Vue.js and Vuetify for the front-end, and uses the NFT.Storage API for image and metadata storage. The smart contract is deployed on the Ethereum blockchain and was written in Solidity.
+
+## Installation
+
+1. Clone the repository
+2. Install Docker: "https://www.docker.com/"
+3. Install dependencies with 
+```bash
+yarn
+``` 
+or 
 ```
+npm install
+```
+4. Run the application with 
+```bash
 sudo sh ./start.sh
 ```
+
+## Contributing
+
+We welcome contributions to Cryptocactus! If you'd like to contribute, please fork the repository and submit a pull request.
+
+## License
+
+This project is licensed under the MIT License
+
 
 ## Updates
  
@@ -89,3 +128,24 @@ sudo sh ./start.sh
 * Added spinning icon for loading and Metamask icon
 * Beautified stuffs around
 * Added smartcontract displayed at the end of the loading
+
+#### 12/04/2023
+
+* Added new overlay window for Metamask when the user doesn't identify himself
+* Created new background and window
+
+#### 15/04/2023 
+
+* New branch for components
+* Separated App.vue with new component ChoosePlantCard.vue
+* Improved dialog value trigger from App.vue
+* Improved index.js importation logic
+
+#### 16/04/2023 
+
+* Separated Metamask window into a component
+* Added a function related to first Upload button to trigger Metamask window if the user isn't connected
+* Added form field requirements in Upload and Update Form
+* Deleted all console logs
+* Merged components branch on main
+* Commented code
