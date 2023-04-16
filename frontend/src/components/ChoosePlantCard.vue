@@ -123,14 +123,14 @@
 </v-dialog>
 </template>
 <script>
-import dotenv from 'dotenv';
+// import dotenv from 'dotenv';
 import { NFTStorage, File } from 'nft.storage';  // import NFTStorage and File from nft.storage
 import deploy from "./../deploynft.js";  // import the deploy function from a local file
 import NFTContract from "../assets/NFT.json";  // import NFTContract from a local JSON file
 import { inject, reactive, toRefs } from 'vue';  // import inject, reactive, and toRefs from vue
 
-dotenv.config();
-const apiKey = process.env.VITE_NFTSTORAGE_API_Key;  // define apiKey variable with the imported API key
+// dotenv.config();
+const apiKey = import.meta.env.VITE_NFTSTORAGE_API_Key;  // define apiKey variable with the imported API key
 const nftStorageClient = new NFTStorage({ token: apiKey });  // create a new instance of NFTStorage with the API key
 
 
