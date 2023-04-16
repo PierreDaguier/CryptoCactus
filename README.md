@@ -1,4 +1,4 @@
-<span style="font-family: 'Satisfy', cursive;">Cryptocactus</span>
+# Cryptocactus
 
 ![Cryptocactus logo](/frontend/src/assets/logo.png)
 
