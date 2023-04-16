@@ -129,7 +129,7 @@ import deploy from "./../deploynft.js";  // import the deploy function from a lo
 import NFTContract from "../assets/NFT.json";  // import NFTContract from a local JSON file
 import { inject, reactive, toRefs } from 'vue';  // import inject, reactive, and toRefs from vue
 
-const apiKey = process.env.NFTStorage_API_Key;  // define apiKey variable with the imported API key
+const apiKey = process.env.VITE_NFTSTORAGE_API_Key;  // define apiKey variable with the imported API key
 const nftStorageClient = new NFTStorage({ token: apiKey });  // create a new instance of NFTStorage with the API key
 dotenv.config();
 
