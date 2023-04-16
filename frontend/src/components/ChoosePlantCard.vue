@@ -123,7 +123,6 @@
 </v-dialog>
 </template>
 <script>
-import dotenv from 'dotenv';
 import { NFTStorage, File } from 'nft.storage';  // import NFTStorage and File from nft.storage
 import deploy from "./../deploynft.js";  // import the deploy function from a local file
 import NFTContract from "../assets/NFT.json";  // import NFTContract from a local JSON file
