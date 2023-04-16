@@ -4,7 +4,6 @@ import NFTContract from "@/assets/NFT.json";
 
 let web3;
 
-// Vérifiez si MetaMask est installé
 if (typeof window.ethereum !== 'undefined') {
   web3 = new Web3(window.ethereum);
 } else {
@@ -14,32 +13,37 @@ if (typeof window.ethereum !== 'undefined') {
 const abi = NFTContract.abi;
 const bytecode = NFTContract.bytecode;
 
-const contract = new web3.eth.Contract(abi);
 
 const deploy = async (nftName, nftSymbol) => {
-  const accounts = await web3.eth.getAccounts();
-  const account = accounts[0]; // Utilise le compte actuellement connecté à MetaMask
+  const contract = new web3.eth.Contract(abi);
 
-  if (!account) {
-    throw new Error("Aucun compte Ethereum connecté.");
-  }
+  try {
+    const accounts = await web3.eth.getAccounts();
+    const account = accounts[0]; 
 
-  const gasPrice = await web3.eth.getGasPrice();
-  const gasEstimate = await contract.deploy({
-    data: bytecode,
-    arguments: [nftName, nftSymbol],
-  }).estimateGas({ from: account });
+    if (!account) {
+      throw new Error("Aucun compte Ethereum connecté.");
+    }
 
-  const receipt = await contract.deploy({
-    data: bytecode,
-    arguments: [nftName, nftSymbol],
-  }).send({
-    from: account,
-    gas: gasEstimate,
-    gasPrice: gasPrice,
-  });
+    const gasPrice = await web3.eth.getGasPrice();
+    const gasEstimate = await contract.deploy({
+      data: bytecode,
+      arguments: [nftName, nftSymbol],
+    }).estimateGas({ from: account });
 
-  return receipt;
-};
+    const receipt = await contract.deploy({
+      data: bytecode,
+      arguments: [nftName, nftSymbol],
+    }).send({
+      from: account,
+      gas: gasEstimate,
+      gasPrice: gasPrice,
+    });
+
+    return receipt;
+  } catch (error) {
+    console.error("An error occurred while deploying NFT", error);
+    return error;
+  }}
 
 export default deploy
