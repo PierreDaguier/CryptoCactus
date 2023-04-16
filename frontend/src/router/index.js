@@ -1,7 +1,7 @@
 // Composables
 import { createRouter, createWebHistory } from 'vue-router'
 import App from '@/App.vue'
-// import dotenv from 'dotenv';
+import dotenv from 'dotenv';
 
 const routes = [
   {
@@ -19,6 +19,7 @@ const routes = [
     ],
   },
 ]
+dotenv.config();
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
