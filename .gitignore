@@ -9,3 +9,4 @@ frontend/node_modules
 frontend/secrets.json
 frontend/src/assets/NFT.json
 nft-storage
+frontend/.env
