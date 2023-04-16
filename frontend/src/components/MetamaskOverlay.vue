@@ -1,66 +1,65 @@
 <template>
-      <v-dialog :modelValue="showMetaMaskOverlay" @update:modelValue="showMetaMaskOverlay = $event" persistent max-width="400">
-    <v-card class="metamask-dialog">
-      <v-card-title class="dialog-title text-center">Connection to Metamask<br>needed</v-card-title>
-      <img class="metamask-logo" src="../assets/MetaMask_Fox.svg" alt="MetaMask Logo" />
-      <v-card class="metamask-card rounded-shaped" outlined variant="tonal">
-      <v-card-text class="dialog-text text-center" >
-        
-        <p>To use this app, you need to connect to Metamask</p>
-        <p class="text-center">
-          <a href="https://metamask.io/"  class="dialog-text" target="_blank" rel="noopener noreferrer">
-            Click here to access or to install Metamask on your browser
-          </a>
-        </p>
-        
-      </v-card-text>
+    <v-dialog :modelValue="showMetaMaskOverlay" @update:modelValue="showMetaMaskOverlay = $event" persistent max-width="400">
+      <!-- Metamask connection dialog -->
+      <v-card class="metamask-dialog">
+        <v-card-title class="dialog-title text-center">Connection to Metamask<br>needed</v-card-title>
+        <img class="metamask-logo" src="../assets/MetaMask_Fox.svg" alt="MetaMask Logo" />
+        <v-card class="metamask-card rounded-shaped" outlined variant="tonal">
+          <v-card-text class="dialog-text text-center" >
+            <!-- Message to connect to Metamask -->
+            <p>To use this app, you need to connect to Metamask</p>
+            <p class="text-center">
+              <!-- Link to Metamask website -->
+              <a href="https://metamask.io/"  class="dialog-text" target="_blank" rel="noopener noreferrer">
+                Click here to access or to install Metamask on your browser
+              </a>
+            </p>
+          </v-card-text>
+        </v-card>
+        <v-card-actions>
+          <!-- Button to try again to connect to Metamask -->
+          <v-spacer></v-spacer>
+          <v-btn class="try-again-btn" @click="connectMetaMask">Try again</v-btn>
+        </v-card-actions>
       </v-card>
-      <v-card-actions>
-        <v-spacer></v-spacer>
-        <v-btn 
-         class="try-again-btn" 
-         @click="connectMetaMask"
-         >Try again</v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
+    </v-dialog>
   </template>
-  
   <script>
   export default {
     name: "MetamaskOverlay",
     props: {
-        showMetaMaskOverlay: {
-            type:Boolean,
-            required: true
-        }
+      showMetaMaskOverlay: {
+        type: Boolean,
+        required: true
+      }
     },
     data: () => ({
-        userAddress: '',
-       
+      userAddress: '',
     }),
     methods: {
-        async connectMetaMask() {
-            try {
-                const accounts = await window.ethereum.request({ method: 'eth_accounts' });
-
-                if (accounts.length === 0) {
-                await window.ethereum.request({ method: 'eth_requestAccounts' });
-                }
-                this.userAddress = accounts[0];
-
-                this.$emit('update:modelValue', false); // Ajoutez cette ligne pour émettre l'événement
-            } catch (error) {
-                console.error("An error occured while you connected to Metamask", error);
-                this.$emit('update:modelValue', true); // Ajoutez cette ligne pour émettre l'événement
-            }
-            },
+      async connectMetaMask() {
+        try {
+          const accounts = await window.ethereum.request({ method: 'eth_accounts' });
+  
+          if (accounts.length === 0) {
+            await window.ethereum.request({ method: 'eth_requestAccounts' });
+          }
+          this.userAddress = accounts[0];
+  
+          // Emit event to close the dialog
+          this.$emit('update:modelValue', false);
+        } catch (error) {
+          console.error("An error occurred while you connected to Metamask", error);
+  
+          // Emit event to show the dialog again
+          this.$emit('update:modelValue', true);
+        }
+      },
     },
     mounted() {
-        this.connectMetaMask();
+      this.connectMetaMask();
     },
   };
-
   </script>
   
   <style scoped>
