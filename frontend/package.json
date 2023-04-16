@@ -15,6 +15,7 @@
     "nft.storage": "^7.0.3",
     "pm2": "^5.2.2",
     "roboto-fontface": "*",
+    "uuid": "7",
     "vue": "^3.2.13",
     "vue-router": "^4.0.0",
     "vuetify": "^3.0.0",

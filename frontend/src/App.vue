@@ -27,7 +27,7 @@
           v-bind:class="{ active: isHovering }" 
           v-on:mouseover="isHovering = true" 
           v-on:mouseout="isHovering = false"
-          @click="dialog = true" >Upload </v-btn>
+          @click="checkMetaMaskConnection" >Upload </v-btn>
 
       <choose-plant-card 
         :dialog="dialog"   
@@ -42,7 +42,7 @@
     </v-row>
   </v-container>
 
-  <v-dialog v-model="showMetaMaskOverlay" persistent max-width="400">
+  <!-- <v-dialog v-model="showMetaMaskOverlay" persistent max-width="400">
     <v-card class="metamask-dialog">
       <v-card-title class="dialog-title text-center">Connection to Metamask<br>needed</v-card-title>
       <img class="metamask-logo" src="./assets/MetaMask_Fox.svg" alt="MetaMask Logo" />
@@ -61,12 +61,17 @@
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn 
-         class="dialog-button try-again-btn" 
+         class="try-again-btn" 
          @click="connectMetaMask"
          >Try again</v-btn>
       </v-card-actions>
     </v-card>
-  </v-dialog>
+  </v-dialog> -->
+  <metamask-overlay 
+        :showMetaMaskOverlay="showMetaMaskOverlay"   
+        @update:modelValue="showMetaMaskOverlay = $event"
+        @close-showMetaMaskOverlay="closeShowMetaMaskOverlay">
+    </metamask-overlay>
 
 
 
@@ -77,15 +82,17 @@
 </template>
 <script>
 import ChoosePlantCard from "./components/ChoosePlantCard.vue";
+import MetamaskOverlay from "./components/MetamaskOverlay.vue";
 
 
 export default {
   components:{
-    ChoosePlantCard
+    ChoosePlantCard,
+    MetamaskOverlay
   },
   data: () => ({
 
-    userAddress: '',
+    // userAddress: '',
     showMetaMaskOverlay: false,
     currentYear: new Date().getFullYear(),
     isHovering: false,
@@ -98,25 +105,43 @@ export default {
       this.dialog = false
     },
 
-    async connectMetaMask() {
+    closeShowMetaMaskOverlay() {
+      this.showMetaMaskOverlay = false
+    },
+    async checkMetaMaskConnection() {
     try {
       const accounts = await window.ethereum.request({ method: 'eth_accounts' });
 
       if (accounts.length === 0) {
-        await window.ethereum.request({ method: 'eth_requestAccounts' });
+        this.showMetaMaskOverlay = true;
+      } else {
+        this.dialog = true;
       }
-      this.userAddress = accounts[0];
-
-      this.showMetaMaskOverlay = false;
     } catch (error) {
-      console.error("An error occured while you connected to Metamask", error);
+      console.error("An error occured while checking Metamask connection", error);
       this.showMetaMaskOverlay = true;
     }
   },
 
-    },
-    mounted() {
-  this.connectMetaMask();
+  //   async connectMetaMask() {
+  //   try {
+  //     const accounts = await window.ethereum.request({ method: 'eth_accounts' });
+
+  //     if (accounts.length === 0) {
+  //       await window.ethereum.request({ method: 'eth_requestAccounts' });
+  //     }
+  //     this.userAddress = accounts[0];
+
+  //     this.showMetaMaskOverlay = false;
+  //   } catch (error) {
+  //     console.error("An error occured while you connected to Metamask", error);
+  //     this.showMetaMaskOverlay = true;
+  //   }
+  // },
+
+  //   },
+  //   mounted() {
+  // this.connectMetaMask();
     },
 
 
@@ -177,7 +202,7 @@ a {
   padding: auto;
   max-width: 9rem;
 }
-.try-again-btn {
+/* .try-again-btn {
   font-family: 'Amiri', serif;
   font-size: 1.6rem;
   color: white;
@@ -189,7 +214,7 @@ a {
 .try-again-btn:hover {
   background-color: rgb(58,138,96);
   border: 3px solid rgb(24, 67, 49);
-}
+} */
 .upload-button {
   font-family: 'Amiri', serif;
   font-size: 1.6rem;
@@ -210,12 +235,12 @@ a {
   color: white;
   font-weight: bold;
 }
-.dialog-button {
+/* .dialog-button {
   font-family: 'Amiri', serif;
   font-size: 1.2rem;
   background-color: rgba(24, 67, 49, 0.8);
   border: 3px solid rgb(142, 114, 81);
-}
+} */
 .active {
   transform: scale(1.1);
 }

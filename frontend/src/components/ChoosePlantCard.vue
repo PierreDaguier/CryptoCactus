@@ -29,7 +29,7 @@
     <v-text-field class="form-text" label="Symbol*" v-model="symbol" :rules="[rules.required]"></v-text-field>
     <v-text-field class="form-text" label="Owner*" v-model="owner" :rules="[rules.required]"></v-text-field>
     <v-text-field class="form-text" label="Location*" v-model="plantLocation" :rules="[rules.required]"></v-text-field>
-    <v-text-field class="form-text" label="Any Comment" v-model="comment" ></v-text-field>    
+    <v-text-field class="form-text" label="Any Comment" v-model="comment" :rules="[rules.required]" ></v-text-field>    
     <v-file-input
       v-model="uploadedImage"
       label="Upload your plant's picture"
@@ -51,6 +51,7 @@
           v-on:mouseover="isHovering1 = true" 
           v-on:mouseout="isHovering1 = false"  
          label="Upload"
+         :disabled="!allFieldsFilledUpload"
          @click="UploadPlant">Upload</v-btn>
   </v-col>
 </v-row>  
@@ -69,8 +70,9 @@
     <v-text-field class="form-text" label="Specie/Variety*" v-model="species" :rules="[rules.required]"></v-text-field>
     <v-text-field class="form-text" label="Owner*" v-model="owner" :rules="[rules.required]"></v-text-field>
     <v-text-field class="form-text" label="Location*" v-model="plantLocation" :rules="[rules.required]"></v-text-field>
-    <v-text-field class="form-text" label="Any Comment*" v-model="comment" ></v-text-field>
+    <v-text-field class="form-text" label="Any Comment*" v-model="comment" :rules="[rules.required]"></v-text-field>
     <v-file-input
+      :rules="[rules.required]"
       v-model="uploadedImage"
       label="Upload your plant's picture"
       accept="image/*">
@@ -91,7 +93,8 @@
          size="x-large"  
          label="Upload"
          prepend-icon="mdi-cloud-upload"
-         @click="UpdatePlant">Upload</v-btn>
+         :disabled="!allFieldsFilledUpdate"
+         @click="UpdatePlant">Update</v-btn>
   </v-col>
 </v-row>  
   
@@ -154,6 +157,7 @@ export default {
         description:'',
         symbol:'',
         owner:'',
+        uploadedImage:null,
         plantLocation:'',
         comment:'',
         isHovering1:false,
@@ -184,6 +188,34 @@ export default {
         });
         return { ...toRefs(state) };
     },
+    computed: {
+
+        allFieldsFilledUpload() {
+          return (
+            this.symbol !== "" &&
+            this.plantName !== "" &&
+            this.description !== "" &&
+            this.species !== "" &&
+            this.owner !== "" &&
+            this.plantLocation !== "" &&
+            this.comment !== "" &&
+            this.uploadedImage !== null
+          );
+        },
+        allFieldsFilledUpdate() {
+        return (
+          this.smartcontractAddress !== "" &&
+          this.plantName !== "" &&
+          this.description !== "" &&
+          this.species !== "" &&
+          this.owner !== "" &&
+          this.plantLocation !== "" &&
+          this.comment !== "" &&
+          this.uploadedImage !== null
+        );
+      },
+      
+    },
     methods: {
         onClickOutside() {
             if (this.showForm1 == true) {
@@ -192,7 +224,6 @@ export default {
                 this.showForm2 = false
             }
                 else {
-                // this.dialog = false
                 this.$emit("close-dialog");
             }
         },
@@ -413,7 +444,7 @@ export default {
 .card3-class {
   background-color: rgba(24, 67, 49, 0.8);
   border: 3px solid rgb(142,114,81);
-  /* box-shadow: 100px 10px 20px 100px rgb(0, 0, 0); */
+
 }
 
 .loading-icon {
