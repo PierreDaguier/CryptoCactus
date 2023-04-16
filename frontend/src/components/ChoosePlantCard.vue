@@ -130,7 +130,7 @@ import { inject, reactive, toRefs } from 'vue';  // import inject, reactive, and
 
 const apiKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDczQmJEZTYyM0YxNUYyMDUyN0RFNjViNjE1OTc0OEUwM0VGNzcyOTgiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTY4MDc0OTgzMjk0NCwibmFtZSI6ImNyeXB0b2NhY3R1cyJ9.ihf0q-ghevhkZDdKd3SXOaXAkJ9NkYD6hAyDexR5u-s";  // define apiKey variable with the imported API key
 const nftStorageClient = new NFTStorage({ token: apiKey });  // create a new instance of NFTStorage with the API key
-dotenv.config();
+
 
 export default {
   name: "ChoosePlantCard",
