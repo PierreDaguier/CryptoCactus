@@ -38,14 +38,19 @@
     }),
     methods: {
       async connectMetaMask() {
+        if (!window.ethereum) {
+          this.$emit('update:modelValue', true);
+          return;
+        }
+
         try {
-          const accounts = await window.ethereum.request({ method: 'eth_accounts' });
-  
+          let accounts = await window.ethereum.request({ method: 'eth_accounts' });
+
           if (accounts.length === 0) {
-            await window.ethereum.request({ method: 'eth_requestAccounts' });
+            accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
           }
           this.userAddress = accounts[0];
-  
+
           // Emit event to close the dialog
           this.$emit('update:modelValue', false);
         } catch (error) {

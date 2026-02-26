@@ -23,17 +23,25 @@ Cryptocactus is built with Vue.js and Vuetify for the front-end, and uses the NF
 
 1. Clone the repository
 2. Install Docker: "https://www.docker.com/"
-3. Install dependencies with 
+3. Start production frontend with Docker:
 ```bash
-yarn
-``` 
-or 
+./start.sh
 ```
+4. Open the app on the URL printed by the script (`http://localhost:8080` by default, auto-fallback to a free port up to `8090`).
+
+If port `8080` is already used, override it:
+
+```bash
+FRONTEND_PORT=8081 ./start.sh
+```
+
+### Smartcontract checks
+
+```bash
+cd smartcontract
 npm install
-```
-4. Run the application with 
-```bash
-sudo sh ./start.sh
+npm run compile
+npm test
 ```
 
 ## Contributing
