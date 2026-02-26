@@ -229,33 +229,56 @@ export default {
       this.showForm1 = false;
     },
     async uploadImage(imageFile) {  // upload image to NFT storage and return URL
-      const file = new File(imageFile, imageFile.name, { type: imageFile.type });
+      const selectedFile = Array.isArray(imageFile) ? imageFile[0] : imageFile;
+
+      if (!selectedFile) {
+        throw new Error("No image file selected.");
+      }
+
+      const file = new File([selectedFile], selectedFile.name, { type: selectedFile.type });
       const cid = await nftStorageClient.storeBlob(file);
       return this.nftStorageUrl(cid);
     },
     async UploadPlant() {  // upload plant to NFT storage and mint NFT
+      if (!this.web3) {
+        throw new Error("Web3 provider is not available.");
+      }
+
       this.isLoading = true;
-      this.loadingText = this.stepsUpload[0];
-      const json = await this.generateJSON();
-      this.loadingText = this.stepsUpload[1];
-      const jsonUri = await this.uploadJSON(json);
-      this.loadingText = this.stepsUpload[2];
-      await this.deployNFT();
-      const accounts = await this.web3.eth.getAccounts();
-      const account = accounts[0];
-      const to = account;
-      this.loadingText = this.stepsUpload[3];
-      const mint = await this.mint(to, jsonUri);
-      const endProcess = [
-        mint,
+      this.showCloseButton = false;
+
+      try {
+        this.loadingText = this.stepsUpload[0];
+        const json = await this.generateJSON();
+        this.loadingText = this.stepsUpload[1];
+        const jsonUri = await this.uploadJSON(json);
+        this.loadingText = this.stepsUpload[2];
+        await this.deployNFT();
+
+        const accounts = await this.web3.eth.getAccounts();
+        const account = accounts[0];
+
+        if (!account) {
+          throw new Error("No Metamask account is connected.");
+        }
+
+        this.loadingText = this.stepsUpload[3];
+        await this.mint(account, jsonUri);
         this.loadingText = `Copy this address somewhere !\n
         This is your plant address.\n
-        Smart contract address: ${this.contractAddress}`,
-        this.showCloseButton = true
-      ];
-      return endProcess;
+        Smart contract address: ${this.contractAddress}`;
+      } catch (error) {
+        console.error("An error occurred while uploading your plant.", error);
+        this.loadingText = "An error occurred. Please retry.";
+      } finally {
+        this.showCloseButton = true;
+      }
     },
     async UpdatePlant() {  // update plant on NFT storage and mint NFT
+      if (!this.web3) {
+        throw new Error("Web3 provider is not available.");
+      }
+
       this.isLoading = true;
       this.loadingText = this.stepsUpdatePlant[0];
       const json = await this.generateJSON();
@@ -278,7 +301,7 @@ export default {
         const plantName = this.plantName;
         const species = this.species;
         const plantLocation = this.plantLocation;
-        const Owner = this.Owner;
+        const owner = this.owner;
         const comment = this.comment;
         const dateTimestamped = Date.now();
 
@@ -289,7 +312,7 @@ export default {
           "attributes": [
             { "trait_type": "Species", "value": species },
             { "trait_type": "Location", "value": plantLocation },
-            { "trait_type": "Owner", "value": Owner },
+            { "trait_type": "Owner", "value": owner },
             { "trait_type": "Comment", "value": comment },
             { "display_type": "date", "trait_type": "uploadDate", "value": dateTimestamped }
           ]
@@ -308,20 +331,26 @@ export default {
       async deployNFT() {  // deploy NFT contract to Ethereum network
         const nftName = this.plantName;
         const nftSymbol = this.symbol;
-        if (nftName.length == 0 || nftSymbol.length == 0) {
-          // do nothing
-        } else {
-          try {
-            const receipt = await deploy(nftName, nftSymbol);
-            this.contractAddress = receipt._address;
-          } catch (error) {
-            console.error("Error occured during deployment", error);
-          }
+        if (nftName.length === 0 || nftSymbol.length === 0) {
+          throw new Error("NFT name and symbol are required for deployment.");
+        }
+
+        try {
+          const receipt = await deploy(nftName, nftSymbol);
+          this.contractAddress = receipt._address;
+        } catch (error) {
+          console.error("Error occured during deployment", error);
+          throw error;
         }
       },
       async mint(to, uri) {  // mint NFT and return receipt
         const abi = NFTContract.abi;
         const contractAddress = this.contractAddress;
+
+        if (!contractAddress) {
+          throw new Error("Missing contract address.");
+        }
+
         const contract = new this.web3.eth.Contract(abi, contractAddress);
 
         const accounts = await this.web3.eth.getAccounts();

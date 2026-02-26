@@ -1,0 +1,12 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "installCommand": "if [ -d frontend ]; then cd frontend && npm install; else npm install; fi",
+  "buildCommand": "if [ -d frontend ]; then cd frontend && npm run build && rm -rf ../dist && cp -R dist ../dist; else npm run build; fi",
+  "outputDirectory": "dist",
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}

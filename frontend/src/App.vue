@@ -8,7 +8,7 @@
         <v-col cols="12" sm="10" md="8">
           <h1 class="text-center primary">CryptoCactus</h1>
           <v-card class="px-5 py-5 card1-class" outlined variant="tonal">
-            <v-img class="mx-auto" src="../public/logo.svg" max-width="550"></v-img>
+            <v-img class="mx-auto" src="/logo.svg" max-width="550"></v-img>
             <v-card elevation="12" class="card2-class rounded-shaped" outlined variant="tonal">
               <p class="ma-3 text-center secondary">
                 Welcome to CryptoCactus!
@@ -98,6 +98,11 @@ export default {
     // Otherwise he will open the ChoosePlantComponent instead, by turning the "dialog" variable to "true".
 
     async checkMetaMaskConnection() {
+      if (!window.ethereum) {
+        this.showMetaMaskOverlay = true;
+        return;
+      }
+
       try {
         const accounts = await window.ethereum.request({ method: 'eth_accounts' });
 
@@ -132,7 +137,7 @@ a {
   text-decoration: underline;
 }
 .app-background {
-  background-image: url("../public/app-background.png");
+  background-image: url("/app-background.png");
   background-size: cover;}
 .card1-class {
   background-color: rgba(110, 150, 120, 0.715);
