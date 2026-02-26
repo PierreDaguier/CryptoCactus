@@ -21,7 +21,7 @@
       "type": "function"
     }
   ],
-  "metadata": "{\"compiler\":{\"version\":\"0.8.0+commit.c7dfd78e\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"_interfaceID\",\"type\":\"bytes4\"}],\"name\":\"supportsInterface\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"project:/etc/erc_165.sol\":\"ERC165\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"project:/etc/erc_165.sol\":{\"keccak256\":\"0x3a84709f3e844e08efcac923721d5f0994bfb9d92fc878a1029a71c8e33026b4\",\"urls\":[\"bzz-raw://42403d1cc4acde5727ddad5005316259cdfc90adfb424c68dc776b473eb34fb2\",\"dweb:/ipfs/QmVf5qNHF2FP7UNdDC4sd1SYPtdmrNc3pSNGLRKmav27pW\"]}},\"version\":1}",
+  "metadata": "{\"compiler\":{\"version\":\"0.8.0+commit.c7dfd78e\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"_interfaceID\",\"type\":\"bytes4\"}],\"name\":\"supportsInterface\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"project:/etc/erc_165.sol\":\"ERC165\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"project:/etc/erc_165.sol\":{\"keccak256\":\"0x0070a50a4b02e906ed28de6292528875188379c622ae1f21c00236f5b314399c\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://c10fea2c819417ad76655a3a513e4ff0b0f8320dfe1dc915339896172310b62a\",\"dweb:/ipfs/Qmd67gKPGCT8PYbixcQBn6gs78Yn7R7JruV7pkMNCENpF7\"]}},\"version\":1}",
   "bytecode": "0x",
   "deployedBytecode": "0x",
   "immutableReferences": {},
@@ -29,20 +29,21 @@
   "deployedGeneratedSources": [],
   "sourceMap": "",
   "deployedSourceMap": "",
-  "source": "pragma solidity ^0.8.0;\n\n\ninterface ERC165\n{\n\n\n  function supportsInterface(\n    bytes4 _interfaceID\n  )\n    external\n    view\n    returns (bool);\n    \n}",
-  "sourcePath": "/home/pdaguier/CryptoCactus/smartcontract/etc/erc_165.sol",
+  "source": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.0;\n\n\ninterface ERC165\n{\n\n\n  function supportsInterface(\n    bytes4 _interfaceID\n  )\n    external\n    view\n    returns (bool);\n    \n}",
+  "sourcePath": "/home/pierre/pierre-portfolio/CryptoCactus/smartcontract/etc/erc_165.sol",
   "ast": {
     "absolutePath": "project:/etc/erc_165.sol",
     "exportedSymbols": {
       "ERC165": [
-        1059
+        1395
       ]
     },
-    "id": 1060,
+    "id": 1396,
+    "license": "MIT",
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 1051,
+        "id": 1387,
         "literals": [
           "solidity",
           "^",
@@ -50,7 +51,7 @@
           ".0"
         ],
         "nodeType": "PragmaDirective",
-        "src": "0:23:8"
+        "src": "32:23:10"
       },
       {
         "abstract": false,
@@ -58,33 +59,33 @@
         "contractDependencies": [],
         "contractKind": "interface",
         "fullyImplemented": false,
-        "id": 1059,
+        "id": 1395,
         "linearizedBaseContracts": [
-          1059
+          1395
         ],
         "name": "ERC165",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "functionSelector": "01ffc9a7",
-            "id": 1058,
+            "id": 1394,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "supportsInterface",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1054,
+              "id": 1390,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1053,
+                  "id": 1389,
                   "mutability": "mutable",
                   "name": "_interfaceID",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1058,
-                  "src": "81:19:8",
+                  "scope": 1394,
+                  "src": "113:19:10",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -92,10 +93,10 @@
                     "typeString": "bytes4"
                   },
                   "typeName": {
-                    "id": 1052,
+                    "id": 1388,
                     "name": "bytes4",
                     "nodeType": "ElementaryTypeName",
-                    "src": "81:6:8",
+                    "src": "113:6:10",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bytes4",
                       "typeString": "bytes4"
@@ -104,20 +105,20 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "75:29:8"
+              "src": "107:29:10"
             },
             "returnParameters": {
-              "id": 1057,
+              "id": 1393,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1056,
+                  "id": 1392,
                   "mutability": "mutable",
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1058,
-                  "src": "140:4:8",
+                  "scope": 1394,
+                  "src": "172:4:10",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -125,10 +126,10 @@
                     "typeString": "bool"
                   },
                   "typeName": {
-                    "id": 1055,
+                    "id": 1391,
                     "name": "bool",
                     "nodeType": "ElementaryTypeName",
-                    "src": "140:4:8",
+                    "src": "172:4:10",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
                       "typeString": "bool"
@@ -137,28 +138,28 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "139:6:8"
+              "src": "171:6:10"
             },
-            "scope": 1059,
-            "src": "49:97:8",
+            "scope": 1395,
+            "src": "81:97:10",
             "stateMutability": "view",
             "virtual": false,
             "visibility": "external"
           }
         ],
-        "scope": 1060,
-        "src": "26:127:8"
+        "scope": 1396,
+        "src": "58:127:10"
       }
     ],
-    "src": "0:153:8"
+    "src": "32:153:10"
   },
   "compiler": {
     "name": "solc",
     "version": "0.8.0+commit.c7dfd78e.Emscripten.clang"
   },
   "networks": {},
-  "schemaVersion": "3.4.13",
-  "updatedAt": "2023-04-07T07:29:09.907Z",
+  "schemaVersion": "3.4.10",
+  "updatedAt": "2026-02-26T04:33:29.835Z",
   "devdoc": {
     "kind": "dev",
     "methods": {},

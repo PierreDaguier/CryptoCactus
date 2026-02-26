@@ -1,15 +1,19 @@
 {
   "name": "smartcontract",
   "version": "1.0.0",
-  "description": "",
+  "description": "CryptoCactus smart contracts",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "compile": "truffle compile --all",
+    "test": "truffle test --network test"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "solc": "^0.8.17",
     "truffle": "^5.6.1"
+  },
+  "devDependencies": {
+    "ganache": "^7.9.2"
   }
 }

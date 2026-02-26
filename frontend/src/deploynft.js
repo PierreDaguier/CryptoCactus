@@ -6,8 +6,6 @@ let web3;
 
 if (typeof window.ethereum !== 'undefined') {
   web3 = new Web3(window.ethereum);
-} else {
-  console.error("MetaMask n'est pas installé.");
 }
 
 const abi = NFTContract.abi;
@@ -15,6 +13,10 @@ const bytecode = NFTContract.bytecode;
 
 
 const deploy = async (nftName, nftSymbol) => {
+  if (!web3) {
+    throw new Error("MetaMask is not installed.");
+  }
+
   const contract = new web3.eth.Contract(abi);
 
   try {
@@ -43,7 +45,8 @@ const deploy = async (nftName, nftSymbol) => {
     return receipt;
   } catch (error) {
     console.error("An error occurred while deploying NFT", error);
-    return error;
-  }}
+    throw error;
+  }
+};
 
-export default deploy
+export default deploy;

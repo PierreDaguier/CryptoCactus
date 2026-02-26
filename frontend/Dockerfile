@@ -1,16 +1,21 @@
+FROM node:20-bookworm-slim AS build
 
-FROM node:16
+WORKDIR /app
 
+RUN apt-get update \
+  && apt-get install -y --no-install-recommends python3 make g++ \
+  && rm -rf /var/lib/apt/lists/*
 
-WORKDIR /usr/src/app
-
+COPY package*.json ./
+RUN npm ci
 
 COPY . .
+RUN npm run build
 
+FROM nginx:1.27-alpine
 
-RUN yarn
-RUN npm i -g pm2
+COPY --from=build /app/dist /usr/share/nginx/html
 
-EXPOSE 8080
+EXPOSE 80
 
-CMD ["pm2-runtime", "start", "pm2/ecosystem.config.js"]
+CMD ["nginx", "-g", "daemon off;"]
